@@ -8,27 +8,22 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 public class MainActivity extends FragmentActivity {
-
     private static final String TAG = "@@@";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //testAppLog();
         testLogLevels();
+    }
 
-        {
-            ch.qos.logback.classic.Logger log = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(TAG);
-            log.setLevel(Level.ALL);
-        }
-
-        Logger log = LoggerFactory.getLogger(TAG);
-
-        log.debug("debug.start()");
-        log.info("info hello world {}", 3);
-        log.warn("warn hello world {}", 3);
-        log.error("erro hello world {}", 3);
-        log.trace("trace hello world {}", 4);
+    private void testAppLog() {
+        //AppLogger.error("Terrible error");
+        //AppLogger.warn("Using default config");
+        //AppLogger.info("Database updated");
+        //AppLogger.debug("Response : {some_json}");
+        //AppLogger.verbose("testAppLog() called");
     }
 
     private void testLogLevels() {
