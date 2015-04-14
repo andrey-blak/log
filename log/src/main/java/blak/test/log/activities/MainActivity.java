@@ -1,6 +1,6 @@
 package blak.test.log.activities;
 
-import blak.test.log.log.AppLogger;
+import blak.test.log.log.LoggerManager;
 import blak.test.log.log.LoggerType;
 
 import android.os.Bundle;
@@ -17,16 +17,26 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void testAppLog() {
-        AppLogger.getLogger(LoggerType.LOGCAT).error("Terrible error");
-        AppLogger.getLogger(LoggerType.LOGCAT).warn("Using default config");
-        AppLogger.getLogger(LoggerType.LOGCAT).info("Database updated");
-        AppLogger.getLogger(LoggerType.LOGCAT).debug("Response : {some_json}");
-        AppLogger.getLogger(LoggerType.IMAGE).trace("testAppLog() called");
+        LoggerManager.getLogger(LoggerType.LOGCAT).error("Terrible error");
+        LoggerManager.getLogger(LoggerType.LOGCAT).warn("Using default config");
+        LoggerManager.getLogger(LoggerType.LOGCAT).info("Database updated");
+        LoggerManager.getLogger(LoggerType.LOGCAT).debug("Response : {some_json}");
+        LoggerManager.getLogger(LoggerType.IMAGE).trace("testAppLog() called");
 
-        AppLogger.getLogger(LoggerType.LOGENTRIES).error("[Logentries] Terrible error");
-        AppLogger.getLogger(LoggerType.LOGENTRIES).warn("[Logentries] Using default config");
-        AppLogger.getLogger(LoggerType.LOGENTRIES).info("[Logentries] Database updated");
-        AppLogger.getLogger(LoggerType.LOGENTRIES).debug("[Logentries] Response : {some_json}");
-        AppLogger.getLogger(LoggerType.LOGENTRIES).trace("[Logentries] testAppLog() called");
+        LoggerManager.getLogger(LoggerType.LOGENTRIES).error("[Logentries] Terrible error");
+        LoggerManager.getLogger(LoggerType.LOGENTRIES).warn("[Logentries] Using default config");
+        LoggerManager.getLogger(LoggerType.LOGENTRIES).info("[Logentries] Database updated");
+        LoggerManager.getLogger(LoggerType.LOGENTRIES).debug("[Logentries] Response : {some_json}");
+        LoggerManager.getLogger(LoggerType.LOGENTRIES).trace("[Logentries] testAppLog() called");
+
+        logException();
+    }
+
+    private void logException() {
+        try {
+            throw new IllegalStateException("Test exception");
+        } catch (IllegalStateException e) {
+            LoggerManager.getLogger(LoggerType.LOGCAT).error("", e);
+        }
     }
 }

@@ -10,9 +10,9 @@ import ch.qos.logback.core.FileAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AppLogger {
+public class LoggerManager {
 
-    private AppLogger() {
+    private LoggerManager() {
     }
 
     public static void init() {
