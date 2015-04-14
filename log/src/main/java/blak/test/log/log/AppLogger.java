@@ -1,75 +1,63 @@
 package blak.test.log.log;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.android.LogcatAppender;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.Context;
 import ch.qos.logback.core.FileAppender;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AppLogger {
-    private static final String PATTERN_FULL = "%date{HH:mm:ss.SSS} %-5level %logger{36} [%thread] class.%method:%line - %message%n";
-    private static final String PATTERN_THREAD_MESSAGE = "[%thread] %message%n";
-    private static final String PATTERN_CLASS_METHOD = "%class{0}.%method:%line - %message%n";
 
     private AppLogger() {
     }
 
     public static void init() {
-        configureLogback();
+        for (LoggerType loggerType : LoggerType.values()) {
+            ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(loggerType.name());
+            initLogger((LoggerContext) LoggerFactory.getILoggerFactory(), logger, loggerType);
+        }
     }
 
-    private static void configureLogback() {
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        // reset the default context (which may already have been initialized)
-        // since we want to reconfigure it
-        //loggerContext.reset();
-
-        Appender<ILoggingEvent> logcatAppender = createLogcatAppender(loggerContext);
-        Appender<ILoggingEvent> logcatDebugAppender = createLogcatDebugAppender(loggerContext);
-        Appender<ILoggingEvent> fileAppender = getFileAppender(loggerContext);
-
-        // add the newly created appenders to the root logger;
-        ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-        rootLogger.addAppender(logcatAppender);
-        rootLogger.addAppender(logcatDebugAppender);
-        rootLogger.addAppender(fileAppender);
+    public static Logger getLogger(LoggerType loggerType) {
+        return LoggerFactory.getLogger(loggerType.name());
     }
 
-    private static Appender<ILoggingEvent> createLogcatAppender(LoggerContext loggerContext) {
-        PatternLayoutEncoder encoderShort = new PatternLayoutEncoder();
-        encoderShort.setContext(loggerContext);
-        encoderShort.setPattern(PATTERN_THREAD_MESSAGE);
-        encoderShort.start();
-
-        LogcatAppender logcatAppender = new LogcatAppender();
-        logcatAppender.setContext(loggerContext);
-        logcatAppender.setEncoder(encoderShort);
-        logcatAppender.start();
-        return logcatAppender;
+    private static void initLogger(ch.qos.logback.core.Context loggerContext, ch.qos.logback.classic.Logger logger, LoggerType type) {
+        if (type.shouldUseLogcat()) {
+            LogcatAppender logcatAppender = createLogcatAppender(loggerContext, type);
+            logger.addAppender(logcatAppender);
+        }
+        if (type.shouldUseLogentries()) {
+            FileAppender<ILoggingEvent> fileAppender = getFileAppender(loggerContext);
+            logger.addAppender(fileAppender);
+        }
+        logger.setLevel(Level.ALL);
     }
 
-    private static Appender<ILoggingEvent> createLogcatDebugAppender(LoggerContext loggerContext) {
-        PatternLayoutEncoder encoderShort = new PatternLayoutEncoder();
-        encoderShort.setContext(loggerContext);
-        encoderShort.setPattern(PATTERN_CLASS_METHOD);
-        encoderShort.start();
-
-        LogcatAppender logcatAppender = new LogcatAppender();
-        logcatAppender.setContext(loggerContext);
-        logcatAppender.setEncoder(encoderShort);
-        logcatAppender.start();
-        return logcatAppender;
-    }
-
-    // todo temp
-    private static Appender<ILoggingEvent> getFileAppender(LoggerContext loggerContext) {
+    private static PatternLayoutEncoder getPatternLayoutEncoder(Context loggerContext, Pattern pattern) {
         PatternLayoutEncoder encoderFull = new PatternLayoutEncoder();
         encoderFull.setContext(loggerContext);
-        encoderFull.setPattern(PATTERN_FULL);
+        encoderFull.setPattern(pattern.getValue());
         encoderFull.start();
+        return encoderFull;
+    }
+
+    private static LogcatAppender createLogcatAppender(Context loggerContext, LoggerType type) {
+        PatternLayoutEncoder encoder = getPatternLayoutEncoder(loggerContext, type.getPattern());
+        LogcatAppender logcatAppender = new LogcatAppender();
+        logcatAppender.setContext(loggerContext);
+        logcatAppender.setEncoder(encoder);
+        logcatAppender.start();
+        return logcatAppender;
+    }
+
+    // todo replace with logentries
+    private static FileAppender<ILoggingEvent> getFileAppender(Context loggerContext) {
+        PatternLayoutEncoder encoderFull = getPatternLayoutEncoder(loggerContext, Pattern.FULL);
 
         FileAppender<ILoggingEvent> fileAppender = new FileAppender<>();
         fileAppender.setContext(loggerContext);
@@ -80,4 +68,5 @@ public class AppLogger {
         fileAppender.start();
         return fileAppender;
     }
+
 }

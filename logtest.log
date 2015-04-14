@@ -1,0 +1,4 @@
+17:03:49.272 ERROR LOGENTRIES [main] class.testAppLog:30 - [Logentries] Terrible error
+17:03:49.275 WARN  LOGENTRIES [main] class.testAppLog:31 - [Logentries] Using default config
+17:03:49.276 INFO  LOGENTRIES [main] class.testAppLog:32 - [Logentries] Database updated
+17:03:49.277 DEBUG LOGENTRIES [main] class.testAppLog:33 - [Logentries] Response : {some_json}
