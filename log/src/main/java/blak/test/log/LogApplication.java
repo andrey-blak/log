@@ -1,6 +1,6 @@
 package blak.test.log;
 
-import blak.test.log.log.LoggerManager;
+import blak.test.log.log.LogManager;
 
 import android.app.Application;
 
@@ -20,6 +20,6 @@ public class LogApplication extends Application {
     }
 
     private void initLogManager() {
-        LoggerManager.init();
+        LogManager.init();
     }
 }

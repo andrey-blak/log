@@ -1,42 +1,35 @@
 package blak.test.log.log;
 
-/**
- * Configuration for loggers
- */
 public enum LoggerType {
-    LOGCAT,
-    IMAGE(Pattern.CLASS_METHOD),
-    LOGENTRIES(false, true),
-    ALL(Pattern.FULL, true, true);
+    LOGCAT(),
+    FILE(Library.LOGCAT | Library.FILE),
+    TRACE(Pattern.TRACE);
 
-    private final boolean mShouldUseLogcat;
-    private final boolean mShouldUseLogentries;
+    @Library.Flags
+    private final int mLibraryFlags;
+
     private final Pattern mPattern;
 
     LoggerType() {
-        this(Pattern.SIMPLE, true, false);
+        this(Pattern.SIMPLE, Library.LOGCAT);
     }
 
     LoggerType(Pattern pattern) {
-        this(pattern, true, false);
+        this(pattern, Library.LOGCAT);
     }
 
-    LoggerType(boolean shouldUseLogcat, boolean shouldUseLogentries) {
-        this(Pattern.SIMPLE, shouldUseLogcat, shouldUseLogentries);
+    LoggerType(@Library.Flags int libraryFlags) {
+        this(Pattern.SIMPLE, libraryFlags);
     }
 
-    LoggerType(Pattern pattern, boolean useLogcat, boolean useLogentries) {
-        mShouldUseLogcat = useLogcat;
-        mShouldUseLogentries = useLogentries;
+    LoggerType(Pattern pattern, @Library.Flags int libraryFlags) {
+        mLibraryFlags = libraryFlags;
         mPattern = pattern;
     }
 
-    public boolean shouldUseLogcat() {
-        return mShouldUseLogcat;
-    }
-
-    public boolean shouldUseLogentries() {
-        return mShouldUseLogentries;
+    @Library.Flags
+    public int getLibraryFlags() {
+        return mLibraryFlags;
     }
 
     Pattern getPattern() {

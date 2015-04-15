@@ -1,15 +1,19 @@
 package blak.test.log.log;
 
+/*
+ * See conversion words here:
+ * http://logback.qos.ch/manual/layouts.html#conversionWord
+ */
 enum Pattern {
-    FULL("%date{HH:mm:ss.SSS} %-5level %logger{36} [%thread] class.%method:%line - %message%n%exception"),
-    SIMPLE("%message%n%exception"),
-    THREAD_MESSAGE("[%thread] %message%n%exception"),
-    CLASS_METHOD("%class{0}.%method:%line - %message%n%exception");
+    SIMPLE("%message"),
+    TRACE("[%thread] %class{0}.%method:%line - %message");
 
-    private String mValue;
+    private static final String POSTFIX = "%n%exception";
+
+    private final String mValue;
 
     Pattern(String value) {
-        mValue = value;
+        mValue = value + POSTFIX;
     }
 
     public String getValue() {

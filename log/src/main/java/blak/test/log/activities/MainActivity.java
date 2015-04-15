@@ -1,6 +1,6 @@
 package blak.test.log.activities;
 
-import blak.test.log.log.LoggerManager;
+import blak.test.log.log.LogManager;
 import blak.test.log.log.LoggerType;
 
 import android.os.Bundle;
@@ -17,26 +17,27 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void testAppLog() {
-        LoggerManager.getLogger(LoggerType.LOGCAT).error("Terrible error");
-        LoggerManager.getLogger(LoggerType.LOGCAT).warn("Using default config");
-        LoggerManager.getLogger(LoggerType.LOGCAT).info("Database updated");
-        LoggerManager.getLogger(LoggerType.LOGCAT).debug("Response : {some_json}");
-        LoggerManager.getLogger(LoggerType.IMAGE).trace("testAppLog() called");
+        LogManager.getLogger(LoggerType.LOGCAT).error("Terrible error");
+        LogManager.getLogger(LoggerType.LOGCAT).warn("Using default config");
+        LogManager.getLogger(LoggerType.LOGCAT).info("Database updated");
+        LogManager.getLogger(LoggerType.LOGCAT).debug("Response : {some_json}");
+        LogManager.getLogger(LoggerType.TRACE).trace("testAppLog() called");
 
-        LoggerManager.getLogger(LoggerType.LOGENTRIES).error("[Logentries] Terrible error");
-        LoggerManager.getLogger(LoggerType.LOGENTRIES).warn("[Logentries] Using default config");
-        LoggerManager.getLogger(LoggerType.LOGENTRIES).info("[Logentries] Database updated");
-        LoggerManager.getLogger(LoggerType.LOGENTRIES).debug("[Logentries] Response : {some_json}");
-        LoggerManager.getLogger(LoggerType.LOGENTRIES).trace("[Logentries] testAppLog() called");
+        LogManager.getLogger(LoggerType.FILE).error("[File] Terrible error");
+        LogManager.getLogger(LoggerType.FILE).warn("[File] Using default config");
+        LogManager.getLogger(LoggerType.FILE).info("[File] Database updated");
+        LogManager.getLogger(LoggerType.FILE).debug("[File] Response : {some_json}");
+        LogManager.getLogger(LoggerType.FILE).trace("[File] testAppLog() called");
 
         logException();
     }
 
     private void logException() {
+        String json = "{json}";
         try {
             throw new IllegalStateException("Test exception");
-        } catch (IllegalStateException e) {
-            LoggerManager.getLogger(LoggerType.LOGCAT).error("", e);
+        } catch (IllegalStateException ex) {
+            LogManager.getLogger(LoggerType.LOGCAT).error("Failed to parse json message {}", json, ex);
         }
     }
 }
