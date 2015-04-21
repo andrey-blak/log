@@ -38,6 +38,7 @@ public class MainActivity extends FragmentActivity {
             throw new IllegalStateException("Test exception");
         } catch (IllegalStateException ex) {
             LogManager.getLogger(LoggerType.LOGCAT).error("Failed to parse json message {}", json, ex);
+            LogManager.exception(ex);
         }
     }
 }
